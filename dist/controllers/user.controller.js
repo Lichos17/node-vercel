@@ -37,7 +37,12 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             .json({ status: "error", msg: "The user already exists" });
     const newUser = new user_1.default({ email, password, name, passwordConfirm });
     yield newUser.save();
-    res.status(201).json({ status: "success", data: { user: newUser } });
+    const token = createToken(newUser);
+    return res.status(200).json({
+        status: "success",
+        token,
+        data: { user: Object.assign(Object.assign({}, newUser.toObject()), { password: undefined }) },
+    });
 });
 exports.signUp = signUp;
 const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -72,6 +77,7 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         req.headers.authorization.startsWith("Bearer")) {
         token = req.headers.authorization.split(" ")[1];
     }
+    console.log({ token });
     if (!token) {
         return res.status(401).send({
             status: "error",

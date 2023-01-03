@@ -31,7 +31,13 @@ export const signUp = async (req: Request, res: Response) => {
 
   await newUser.save();
 
-  res.status(201).json({ status: "success", data: { user: newUser } });
+  const token = createToken(newUser);
+
+  return res.status(200).json({
+    status: "success",
+    token,
+    data: { user: { ...newUser.toObject(), password: undefined } },
+  });
 };
 
 export const signIn = async (req: Request, res: Response) => {
@@ -80,6 +86,8 @@ export const protect = async (
   ) {
     token = req.headers.authorization.split(" ")[1];
   }
+
+  console.log({ token });
 
   if (!token) {
     return res.status(401).send({
