@@ -3,7 +3,6 @@ import morgan from "morgan";
 import cors from "cors";
 
 import authRoutes from "./routes/auth.routes";
-import productRoutes from "./routes/product.routes";
 import { protect } from "./controllers/user.controller";
 
 //initializations
@@ -24,6 +23,5 @@ app.get("/", protect, (req, res) => {
 });
 
 app.use("/auth", authRoutes);
-app.use("/products", protect, productRoutes);
 
 export default app;

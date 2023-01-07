@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import User, { IUser } from "../models/user";
-import jwt, { Secret, VerifyOptions } from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import config from "../config/config";
 import { promisify } from "util";
 
@@ -86,8 +86,6 @@ export const protect = async (
   ) {
     token = req.headers.authorization.split(" ")[1];
   }
-
-  console.log({ token });
 
   if (!token) {
     return res.status(401).send({
