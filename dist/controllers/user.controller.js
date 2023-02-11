@@ -23,7 +23,6 @@ function createToken(user) {
 }
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password, name, passwordConfirm } = req.body;
-    console.log(req.body);
     if (!email || !password || !name) {
         return res.status(400).json({
             status: "error",
@@ -62,7 +61,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!hasMatch)
         return res
             .status(400)
-            .json({ status: "error", msg: "Please verify your credentials" });
+            .json({ status: "error", msg: "Revisa tus credenciales." });
     const token = createToken(user);
     return res.status(200).json({
         status: "success",
