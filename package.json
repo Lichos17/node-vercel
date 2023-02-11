@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"node dist/index.js\" "
+    "prod": "tsc-watch --onSuccess \"NODE_ENV=prod node dist/index.js\" ",
+    "prod:build": "tsc-watch --onSuccess \"node dist/index.js\" ",
+    "dev": "SET NODE_ENV=dev && tsc-watch --onSuccess  \"node dist/index.js\" "
   },
   "keywords": [],
   "author": "",
@@ -12,6 +14,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.8.0",

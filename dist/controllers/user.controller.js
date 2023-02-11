@@ -12,18 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.protect = exports.signIn = exports.signUp = void 0;
+exports.userInfo = exports.signIn = exports.signUp = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config/config"));
-const util_1 = require("util");
 function createToken(user) {
     return jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, config_1.default.jwtSecret, {
-        expiresIn: 86400,
+        expiresIn: "1h",
     });
 }
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password, name, passwordConfirm } = req.body;
+    console.log(req.body);
     if (!email || !password || !name) {
         return res.status(400).json({
             status: "error",
@@ -34,7 +34,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (user)
         return res
             .status(400)
-            .json({ status: "error", msg: "The user already exists" });
+            .json({ status: "error", msg: "El usuario ya existe." });
     const newUser = new user_1.default({ email, password, name, passwordConfirm });
     yield newUser.save();
     const token = createToken(newUser);
@@ -71,23 +71,12 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.signIn = signIn;
-const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let token;
-    if (req.headers.authorization &&
-        req.headers.authorization.startsWith("Bearer")) {
-        token = req.headers.authorization.split(" ")[1];
-    }
-    console.log({ token });
-    if (!token) {
-        return res.status(401).send({
-            status: "error",
-            msg: "No tienes permitido ingresar a esta ruta",
-        });
-    }
-    const signToken = (0, util_1.promisify)(jsonwebtoken_1.default.verify);
-    const decoded = yield signToken(token, config_1.default.jwtSecret);
-    const user = user_1.default.findOne({ email: decoded.email });
-    req.user = user;
-    next();
+const userInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    res.statusCode = 200;
+    return res.json({
+        status: "success",
+        data: { user: Object.assign(Object.assign({}, user), { password: undefined }) },
+    });
 });
-exports.protect = protect;
+exports.userInfo = userInfo;

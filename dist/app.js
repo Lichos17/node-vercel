@@ -7,21 +7,21 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
-const product_routes_1 = __importDefault(require("./routes/product.routes"));
-const user_controller_1 = require("./controllers/user.controller");
+const boughts_routes_1 = __importDefault(require("./routes/boughts.routes"));
+const protectRoute_1 = require("./middleware/protectRoute");
 //initializations
 const app = (0, express_1.default)();
 //settings
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 5000);
 //middlewares
 app.use((0, morgan_1.default)("dev"));
 app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(express_1.default.json());
 //routes
-app.get("/", user_controller_1.protect, (req, res) => {
+app.get("/", protectRoute_1.protectRoute, (req, res) => {
     res.send(`The API is at http://localhost: ${app.get("port")}`);
 });
 app.use("/auth", auth_routes_1.default);
-app.use("/products", user_controller_1.protect, product_routes_1.default);
+app.use("/bought", boughts_routes_1.default);
 exports.default = app;
